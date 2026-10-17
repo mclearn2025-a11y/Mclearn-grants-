@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>McLearn Grant Portal</title>
+<style>
+:root{--bg:#f6f4ef;--card:#fff;--ink:#1d1b18;--mute:#6b665d;--line:#e3ded3;--acc:#0f6b5c;--acc2:#e7f3f0;--warn:#a4400f;--warn2:#fbeee6;--gold:#8a6400;--gold2:#fbf3dc;--blue:#24508f;--blue2:#e8eef8;--r:12px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151412;--card:#1f1d1a;--ink:#f0ece4;--mute:#a59f94;--line:#35322c;--acc:#5cc6b0;--acc2:#16312c;--warn:#f0956a;--warn2:#3a2219;--gold:#e3bd5c;--gold2:#352c14;--blue:#8fb2ec;--blue2:#1b2638}}
+:root[data-theme="dark"]{--bg:#151412;--card:#1f1d1a;--ink:#f0ece4;--mute:#a59f94;--line:#35322c;--acc:#5cc6b0;--acc2:#16312c;--warn:#f0956a;--warn2:#3a2219;--gold:#e3bd5c;--gold2:#352c14;--blue:#8fb2ec;--blue2:#1b2638}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
+h2{font-size:19px;margin:28px 0 10px}
+h3{font-size:16px;margin:0 0 4px}
+.sub{color:var(--mute);margin:0}
+.hero{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:end;margin-bottom:16px}
+.next{background:var(--warn2);border:1px solid var(--warn);border-radius:var(--r);padding:12px 14px;min-width:240px}
+.next b{color:var(--warn);font-size:22px;display:block}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin:18px 0 14px}
+.tabs button{border:0;background:none;color:var(--mute);font:inherit;font-weight:600;padding:9px 12px;border-bottom:3px solid transparent;cursor:pointer}
+.tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--acc)}
+.panel{display:none}.panel.on{display:block}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+#newProj[hidden]{display:none!important}
+.chip.proj{font-size:14px;font-weight:600;padding:8px 14px}
+.chip[aria-pressed="true"]{background:var(--acc);color:var(--card);border-color:var(--acc)}
+input[type=search],input[type=text],input[type=number],select,textarea{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%}
+textarea{min-height:60px;resize:vertical}
+.grid{display:grid;gap:12px}
+.g{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.g .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.funder{color:var(--mute);font-size:13px}
+.due{text-align:right;white-space:nowrap;font-weight:700}
+.due small{display:block;font-weight:500;color:var(--mute)}
+.due.hot{color:var(--warn)}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.tag{font-size:12px;border-radius:6px;padding:2px 8px;background:var(--acc2);color:var(--acc);font-weight:600}
+.tag.w{background:var(--warn2);color:var(--warn)}.tag.y{background:var(--gold2);color:var(--gold)}.tag.b{background:var(--blue2);color:var(--blue)}
+.fit{margin:6px 0 8px}
+.row{display:grid;grid-template-columns:170px 1fr auto;gap:8px;align-items:center;margin-top:8px}
+a{color:var(--acc)}
+.small{font-size:13px;color:var(--mute)}
+.uses{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.u ul{margin:6px 0 8px;padding-left:18px}.u li{margin:2px 0}
+.u .em{font-size:24px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+label{display:block;font-weight:600;font-size:13px;margin:10px 0 4px}
+.checks label{font-weight:400;font-size:14px;display:flex;gap:8px;align-items:flex-start;margin:6px 0}
+.checks input{margin-top:4px}
+.btn{background:var(--acc);color:var(--card);border:0;border-radius:8px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer}
+.btn.ghost{background:none;color:var(--acc);border:1px solid var(--acc)}
+pre.out{white-space:pre-wrap;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;font:14px/1.55 ui-monospace,Menlo,Consolas,monospace;max-height:620px;overflow:auto}
+.note{background:var(--gold2);border-left:4px solid var(--gold);padding:10px 12px;border-radius:8px;margin:10px 0}
+.sync{font-size:12px;color:var(--mute)}
+.ck{display:grid;gap:8px}
+.ck .g{display:flex;gap:10px;align-items:flex-start;padding:10px 14px}
+.ck input{margin-top:5px;width:18px;height:18px}
+table{border-collapse:collapse;width:100%}td,th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;font-size:14px}
+@media (max-width:720px){.hero{grid-template-columns:1fr}.two{grid-template-columns:1fr}.row{grid-template-columns:1fr}.g .top{flex-direction:column}.due{text-align:left}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <h1>McLearn Grant Portal</h1>
+      <p class="sub">McLearn Media LLC · Brandon, Mississippi · 601-808-9559</p>
+      <div class="filters" id="projs" style="margin:12px 0 4px" aria-label="Projects"></div>
+      <div id="newProj" hidden style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0"><input type="text" id="npName" placeholder="Project name, like 'Praxis study app'" style="max-width:320px"><button class="btn" id="npAdd">Add</button><button class="btn ghost" id="npCancel">Cancel</button></div>
+      <p class="sub" id="projBlurb"></p>
+      <p class="sync" id="sync">Saving: this browser only</p>
+    </div>
+    <div class="next" id="next"></div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-t="grants">Grants</button>
+    <button role="tab" aria-selected="false" data-t="uses">Every way it helps</button>
+    <button role="tab" aria-selected="false" data-t="build">Proposal builder</button>
+    <button role="tab" aria-selected="false" data-t="ready">Get ready to apply</button>
+  </div>
+
+  <section class="panel on" id="p-grants">
+    <div class="filters" id="filters"></div>
+    <input type="search" id="q" placeholder="Search grants, funders, uses…" aria-label="Search grants">
+    <p class="small" id="count"></p>
+    <div class="grid" id="list"></div>
+    <details class="g" id="cg" style="margin-top:14px"><summary style="cursor:pointer;font-weight:700">+ Add a grant you found</summary>
+      <div class="two" style="margin-top:6px">
+        <div><label for="cgName">Grant name</label><input type="text" id="cgName">
+          <label for="cgFunder">Who gives it</label><input type="text" id="cgFunder">
+          <label for="cgAmt">Amount</label><input type="text" id="cgAmt" placeholder="Up to $5,000"></div>
+        <div><label for="cgDue">Deadline (leave blank if rolling)</label><input type="date" id="cgDue" style="font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%">
+          <label for="cgLane">Type</label><select id="cgLane"><option value="now">Apply now</option><option value="partner">Needs a partner</option><option value="next">Next round</option></select>
+          <label for="cgLink">Link</label><input type="text" id="cgLink" placeholder="https://…"></div>
+      </div>
+      <label for="cgFit">How it fits this project</label><textarea id="cgFit"></textarea>
+      <p><button class="btn" id="cgAdd">Add to this project</button> <span class="small" id="cgMsg"></span></p>
+    </details>
+    <p class="small">Labels: <b>Added by you</b> means you entered it. <b>Checked</b> means I read the funder's own page (or an official listing) on Oct 17, 2026. <b>Confirm</b> means the listing came from a grant database and still needs a look at the funder's page. Deadlines change, so always open the link before you write.</p>
+  </section>
+
+  <section class="panel" id="p-uses">
+    <p class="sub">Each card below is a story a funder can pay for. The grant names under each one link to the matching cards on the Grants tab.</p>
+    <div class="uses" id="uses" style="margin-top:14px"></div>
+  </section>
+
+  <section class="panel" id="p-build">
+    <div class="note">This builds a first draft from your pick of grant and uses. Every funder has its own form and page limits, so treat the draft as a starting point and fit it to their instructions.</div>
+    <div class="two">
+      <div>
+        <label for="bGrant">Grant</label><select id="bGrant"></select>
+        <label for="bTitle">Project title</label><input type="text" id="bTitle" value="Speakeasy: A Voice for Every Nonspeaking Mississippian">
+        <label>Uses to feature</label><div class="checks" id="bUses"></div>
+      </div>
+      <div>
+        <label for="bAsk">Amount to ask for ($)</label><input type="number" id="bAsk" value="100000" min="0" step="1000">
+        <label for="bMonths">Project length (months)</label><input type="number" id="bMonths" value="12" min="1">
+        <label>Budget split (%) — change these to fit the funder's rules</label>
+        <table id="bBudget"></table>
+        <label for="bReach">Who you will reach (people, schools, places)</label>
+        <textarea id="bReach">50 families of nonspeaking children and adults in Rankin, Hinds and Madison counties, 5 partner classrooms, and 2 clinics</textarea>
+        <label for="bContact">Contact email for the cover page</label><input type="text" id="bContact" placeholder="your email">
+      </div>
+    </div>
+    <p style="margin-top:14px"><button class="btn" id="bGo">Write the draft</button> <button class="btn ghost" id="bCopy">Copy</button> <button class="btn ghost" id="bSave" hidden>Save as a file</button> <span class="small" id="bMsg"></span></p>
+    <pre class="out" id="bOut">Pick a grant and press "Write the draft."</pre>
+  </section>
+
+  <section class="panel" id="p-ready">
+    <p class="sub" id="ckIntro"></p>
+    <div class="ck" id="ck" style="margin-top:12px"></div>
+  </section>
+</div>
+
+<script>
+(()=>{
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+const S = [["todo","Not started"],["look","Looking into it"],["write","Writing"],["sent","Submitted"],["won","Awarded"],["no","Not a fit"]];
+/* lane: now = an LLC can apply now; partner = needs a nonprofit, school, or research partner; next = closed now, watch for next round; family = families apply, and the money buys a device that runs Speakeasy */
+const G = [
+ {id:"spectra",name:"SPECTRA, Technical Area 4 (AI communication tools for autism)",funder:"ARPA-H (federal health research agency)",amt:"Contract-style award; amount set in talks",due:"2026-10-21",dueNote:"Solution Summary, 3 PM ET. One outside guide says Oct 18, so go by the official page.",lane:"now",ok:true,elig:"Companies can apply, including small businesses.",fit:"TA4 names talking (AAC) tools for nonspeaking autistic people directly. Speakeasy already works offline, in English and Spanish, with 2,306 picture words. The pitch is the smart layer: guessing the next word, learning each person's own words, and turning a few taps into full sentences.",uses:["home","health","mental","school"],link:"https://solutions.arpa-h.gov",link2:"https://www.bwcoconsulting.com/fod/arpa-h-spectra-autism-program"},
+ {id:"nsf",name:"America's Seed Fund — NSF SBIR Phase I",funder:"National Science Foundation",amt:"Up to $305,000",due:"2026-11-04",dueNote:"Full proposal date. You must send a short Project Pitch first and be invited, which can take about 3 weeks, so pitch now. Next date: Mar 4, 2027.",lane:"now",ok:true,elig:"US small businesses (for-profit, fewer than 500 people, mostly US-owned).",fit:"NSF pays for new technology with real risk. The pitch is an on-device AI that predicts what a nonspeaking person means from very few taps and works with no internet.",uses:["home","school","rural","lang"],link:"https://seedfund.nsf.gov"},
+ {id:"msfast",name:"MS-FAST Phase 0 (help writing federal small-business grants)",funder:"Innovate Mississippi",amt:"Up to $3,000",due:null,dueNote:"Apply at least 30 days before the federal deadline: by about Nov 16 for the ACL Dec 16 date, or by Dec 6 for NIH Jan 5.",lane:"now",ok:true,elig:"Mississippi small businesses writing an SBIR or STTR application.",fit:"Pays for a reviewer or grant writer to sharpen the NIDILRR or NIH application. Free help from a Mississippi team.",uses:[],link:"https://www.innovate.ms/mississippi-sbir-sttr-resources/"},
+ {id:"nidilrr",name:"NIDILRR Small Business Innovation Research, Phase I",funder:"Administration for Community Living (HHS)",amt:"Up to about $100,000",due:"2026-12-16",dueNote:"Number HHS-2027-ACL-NIDILRR-BISA-0308.",lane:"now",ok:true,elig:"US small businesses.",fit:"This disability research institute pays for products that help people with disabilities live and work on their own. Speakeasy fits the adult-life, job, and community-living goals directly.",uses:["adult","community","home","health"],link:"http://acl.gov/programs/research-and-development/small-business-innovation-research-program"},
+ {id:"nidilrr-sttr",name:"NIDILRR Small Business Technology Transfer, Phase I",funder:"Administration for Community Living (HHS)",amt:"Up to $150,000",due:null,dueNote:"Check the ACL page for this year's date.",lane:"partner",ok:false,elig:"Small business plus a research partner, such as a university (Jackson State, Southern Miss, Ole Miss, or Mississippi State).",fit:"The same goals as the SBIR, with a university running the study of how well Speakeasy works.",uses:["adult","research"],link:"http://acl.gov/programs/research-and-development/small-business-innovation-research-program"},
+ {id:"nih",name:"NIH Small Business grants (SBIR/STTR) — speech, language, and child health institutes",funder:"National Institutes of Health (NIDCD, NICHD, NIMH and others)",amt:"Phase I and Phase II amounts vary; check the announcement",due:"2027-01-05",dueNote:"Standard dates are Jan 5, Apr 5, and Sep 5. New rule: each company has a yearly cap on HHS small-business applications, so pick your best shot.",lane:"now",ok:true,elig:"US small businesses.",fit:"The speech and language institute (NIDCD) funds new speech and language tools. You can also aim at the mental health institute (NIMH) with the feelings and calm-down tools. Its special digital mental health notice has ended, but the regular small-business route is still open.",uses:["health","mental","research","aging"],link:"https://seed.nih.gov/small-business-funding/find-funding/sbir-sttr-funding-opportunities",link2:"https://www.nidcd.nih.gov/funding/types/small-business-grants"},
+ {id:"verizon",name:"Verizon Small Business Digital Ready Grant",funder:"Verizon with LISC",amt:"$10,000",due:"2026-12-07",dueNote:"Finish 2 free online courses or events on Digital Ready by Dec 7, then apply. Winners are picked monthly; final answers come by Jan 12, 2027.",lane:"now",ok:true,elig:"For-profit US small businesses. Priority goes to low-to-moderate income communities.",fit:"Flexible money for the business itself: devices for testing, the domain, and outreach.",uses:[],link:"https://opportunitiesforyouth.org/2026/09/11/verizon-small-business-grant/"},
+ {id:"rtf",name:"Assistive Technology Grants for schools and libraries",funder:"Rural Technology Fund",amt:"Usually $500–$2,000",due:null,dueNote:"Open all year; reviewed every 30–60 days.",lane:"partner",ok:true,elig:"Rural or high-poverty public schools and libraries apply.",fit:"Help a partner school ask for tablets and cases to run Speakeasy in a special education classroom. It gets kids talking and gives you a real classroom to learn from.",uses:["school","community","rural"],link:"https://ruraltechfund.org/apply-for-grants/"},
+ {id:"mscdd",name:"Innovative Quality of Life grants",funder:"Mississippi Council on Developmental Disabilities",amt:"About $320,000 in past rounds (shared across awards)",due:null,dueNote:"The last deadline was Mar 6, 2026. Watch for the next round in early 2027.",lane:"next",ok:true,elig:"Mississippi groups, including for-profits. A match is required.",fit:"The best Mississippi fit: a statewide rollout of Speakeasy with training for families, teachers, and support staff.",uses:["community","adult","school","lang"],link:"https://leadcenter.org/state_policies/ms-cdd-grants-and-contracts"},
+ {id:"cfm",name:"Community Impact Project Grant",funder:"Community Foundation for Mississippi",amt:"Up to $5,000",due:null,dueNote:"The 2026 round closed Sep 1. The next round likely opens in August 2027.",lane:"next",ok:true,elig:"501(c)(3) groups, groups with a 501(c)(3) fiscal sponsor, or local governments. The project must serve one of 22 counties, including Rankin, Hinds, and Madison.",fit:"A local 'Speakeasy at the library' or 'church communication corner' project run with a nonprofit partner in Rankin County.",uses:["community","faith"],link:"https://formississippi.org/2026-community-impact-project-grant/"},
+ {id:"kevin",name:"The Kevin and Avonte Program (wandering and missing-person safety)",funder:"US Department of Justice, Bureau of Justice Assistance",amt:"See the solicitation",due:null,dueNote:"The 2026 round closed Oct 13. Watch for the 2027 round, usually posted in summer.",lane:"next",ok:true,elig:"Usually police departments, public safety agencies, and nonprofits. Partner with Brandon Police or Rankin County Sheriff.",fit:"Speakeasy's 'About me' card and emergency phrases help a nonspeaking person who wanders tell police or first responders who they are and what they need. Train officers to use it.",uses:["safety"],link:"https://bja.ojp.gov/funding/opportunities/o-bja-2026-172697"},
+ {id:"osep",name:"Educational Technology, Media, and Materials for People with Disabilities (84.327)",funder:"US Department of Education, Special Education Programs",amt:"Varies by project",due:null,dueNote:"The 2026 round closed Jun 26. Watch for the next one.",lane:"next",ok:true,elig:"Includes for-profit companies.",fit:"Accessible learning tools and video. Fits Speakeasy's school lessons plus captioned how-to videos for teachers and families.",uses:["school","video"],link:"https://grantedai.com/grants/educational-technology-media-and-materials-for-individuals-with-disabili-u-s-department-of-education-office-of-sp-1d83a70d"},
+ {id:"dra",name:"States' Economic Development Assistance Program",funder:"Delta Regional Authority",amt:"$50,000–$500,000",due:null,dueNote:"The 2026 round closed Jul 31. Watch for 2027.",lane:"next",ok:true,elig:"Local governments, nonprofits, workforce boards, colleges. Businesses can't apply, but can be partners.",fit:"A workforce project: train Delta paraprofessionals and job coaches to support nonspeaking workers with Speakeasy, run through a community college.",uses:["adult","rural"],link:"https://dra.gov/wp-content/uploads/2026/05/FINAL_2026-SEDAP-NOFA-.pdf"},
+ {id:"msai",name:"AI for Accessibility",funder:"Microsoft",amt:"$10,000–$20,000 in Azure cloud credits, plus a mentor",due:null,dueNote:"Applications are closed right now. Check back for a new round.",lane:"next",ok:true,elig:"Developers, groups, and researchers. The project must be built with or by people with disabilities.",fit:"Credits to build the AI word-guessing and sentence tools.",uses:["home","research"],link:"https://microsoft.com/ai-for-accessibility"},
+ {id:"cta",name:"CTA Foundation grants (technology for older adults and people with disabilities)",funder:"Consumer Technology Association Foundation",amt:"Varies; past grants were often about $25,000",due:null,dueNote:"No public dates. Read the Grant Criteria page and contact them.",lane:"partner",ok:false,elig:"Usually nonprofits. Past grantees include hospitals, and one funded talking tools in children's rehab clinics.",fit:"Partner with a hospital, rehab clinic, or senior center to bring Speakeasy to people with stroke, aphasia, ALS, or dementia.",uses:["health","aging"],link:"https://www.cta.tech/cta-foundation/foundation-grants/"},
+ {id:"ability",name:"Ability Central grants (two-year cycle)",funder:"Ability Central",amt:"$10,000–$200,000",due:null,dueNote:"The 2027–28 letters of intent closed Aug 31, 2026. The next cycle is likely 2028.",lane:"next",ok:true,elig:"Nonprofits and research groups. The project must serve people in California.",fit:"Only if you team up with a California partner. Its 'Assistive and Digital Accessibility' area fits Speakeasy exactly.",uses:["community"],link:"https://abilitycentral.org/philanthropy/2027-2028-grant-cycle"},
+ {id:"aspeaks",name:"Autism Speaks Community Grants",funder:"Autism Speaks",amt:"$5,000–$10,000",due:null,dueNote:"Dates vary; check the page.",lane:"partner",ok:false,elig:"Local nonprofits.",fit:"A Mississippi autism nonprofit could run 'Speakeasy family nights' that teach families how to use it.",uses:["home","community"],link:"https://www.autismspeaks.org/autism-speaks-grants"},
+ {id:"dod",name:"Autism Research Program awards",funder:"US Department of Defense (Congressionally Directed Medical Research)",amt:"Up to $2.25 million",due:"2026-10-22",dueNote:"Too soon for this year, and it needs a full research team. Plan for next year with a university.",lane:"next",ok:true,elig:"Research groups; companies can join a team.",fit:"A university study of talking tools for autistic children in military families.",uses:["research"],link:"https://simpler.grants.gov/opportunity/14d1bdf6-30d6-43c7-9c95-255149283c60"},
+ {id:"ussaac",name:"USSAAC mini grants",funder:"US Society for Augmentative and Alternative Communication",amt:"Small grants",due:null,dueNote:"Open all year. You must be a member.",lane:"now",ok:true,elig:"Members.",fit:"Small money for family training sessions. Membership also puts you in front of the AAC community.",uses:["home"],link:"https://ussaac.org"},
+ {id:"naa",name:"Give a Voice",funder:"National Autism Association",amt:"An iPad package, or letterboard sessions",due:null,dueNote:"Open now; funding is very limited.",lane:"family",ok:true,elig:"Families in financial need.",fit:"Point families who have no tablet here. Once they get one, they open Speakeasy for free.",uses:["home"],link:"https://nationalautismassociation.org/programs/naas-give-a-voice-program/"},
+ {id:"act",name:"ACT Today! family grants",funder:"Autism Care Today",amt:"Up to $5,000 a year",due:null,dueNote:"Check the page for dates.",lane:"family",ok:false,elig:"Families of autistic people.",fit:"Can pay for a tablet, a case, and speech therapy that uses Speakeasy.",uses:["home"],link:"https://www.act-today.org/apply-for-grant/"},
+ {id:"small",name:"Small Steps in Speech grants",funder:"Small Steps in Speech",amt:"Varies",due:null,dueNote:"Check the page for dates.",lane:"family",ok:false,elig:"Children with speech and language needs.",fit:"Talking devices and therapy for children.",uses:["home"],link:"https://www.smallstepsinspeech.org/individuals"},
+ {id:"orange",name:"Technology and Communication Grants",funder:"The Orange Effect Foundation",amt:"Varies",due:null,dueNote:"Check the page for dates.",lane:"family",ok:false,elig:"Children and young adults with speech disorders.",fit:"Speech technology items, such as a tablet that runs Speakeasy.",uses:["home"],link:"https://theorangeeffect.org/orange-effect-foundation-awards-grants/"}
+];
+const LANES = {now:["Apply now","" ],partner:["Needs a partner","b"],next:["Next round","y"],family:["Family device help","w"]};
+const U = [
+ {k:"home",em:"🏠",t:"Home and family",d:"Everyday talking: wants, needs, feelings, and saying yes or no without guessing.",l:["Fewer meltdowns because the person can be understood","Family members learn the same words","Spanish-speaking parents use it in their own language"]},
+ {k:"school",em:"🏫",t:"Schools and special education",d:"A talking tool written into the IEP that works on any school tablet or Chromebook.",l:["Classroom answers, choices, and lessons","Works offline in rural schools","Teachers and aides can learn it fast"]},
+ {k:"early",em:"🧸",t:"Early intervention (ages 0–3)",d:"Start pictures and voice early, while language is growing fastest.",l:["Simple boards for toddlers","Coaching for parents during home visits","Partners: Mississippi First Steps providers"]},
+ {k:"health",em:"🩺",t:"Hospitals, clinics, and therapy",d:"Patients who can't speak can still tell staff about pain, where it hurts, and what they need.",l:["Emergency rooms, ICU patients with breathing tubes, and doctor visits","Stroke and aphasia, ALS, Parkinson's, and brain injury","Speech therapists use it in sessions"]},
+ {k:"mental",em:"💬",t:"Mental health",d:"Naming feelings is the first step to calming down and getting help.",l:["Feelings check-ins and calm-down tools","Tell a counselor what happened, at your own pace","Less frustration and isolation for nonspeaking people"]},
+ {k:"rural",em:"🌾",t:"Rural health and the Delta",d:"Works with no internet once saved, on cheap phones, and costs families nothing to open.",l:["Telehealth visits where the patient taps answers","Fills gaps where there are few speech therapists","Fits Delta Regional and rural health funding"]},
+ {k:"safety",em:"🚓",t:"Emergencies and wandering safety",d:"A nonspeaking person can show who they are and what they need when it matters most.",l:["'About me' card for police and first responders","Emergency phrases and shelter use during disasters","Officer training on meeting nonspeaking people"]},
+ {k:"adult",em:"💼",t:"Adults, jobs, and living on your own",d:"Speak up at work, at the store, at the doctor, and with support staff.",l:["Job coaching and work words","Fits Vocational Rehabilitation and disability-agency goals","Choices and self-advocacy for group homes and day programs"]},
+ {k:"aging",em:"👵",t:"Older adults and memory loss",d:"For people who lose speech from dementia, stroke, or illness.",l:["Senior centers and nursing homes","Simple big-picture boards","Helps caregivers understand needs"]},
+ {k:"lang",em:"🌎",t:"Language access",d:"Each profile can run fully in English or Spanish, so families are served in their own language.",l:["Spanish words, menus, and voice","Bilingual homes and schools","Room to add more languages"]},
+ {k:"community",em:"📚",t:"Libraries, stores, and the community",d:"Order food, check out a book, and join in around town.",l:["A 'talk station' tablet at the library","Training for local businesses on meeting AAC users","Inclusive parks and events"]},
+ {k:"faith",em:"⛪",t:"Churches and faith groups",d:"Take part in worship, Sunday school, and church life.",l:["Prayer and worship word boards","Disability ministry partners","Church-sponsored device drives"]},
+ {k:"video",em:"🎬",t:"Video lessons and training",d:"Short captioned videos that teach families, teachers, and officers to use Speakeasy.",l:["Accessible education video funding (84.327)","A how-to series for caregivers","Spanish and English versions"]},
+ {k:"research",em:"📊",t:"Research and results",d:"With consent, measure how talking grows. Funders want proof.",l:["Partner with a Mississippi university","Track words used and goals met, with data kept private","Strengthens every future application"]}
+];
+const CK = [
+ ["uei","Get a UEI number and register in SAM.gov (free; can take 2–4 weeks)","https://sam.gov"],
+ ["login","Make a Login.gov account (used by SAM, Grants.gov, and others)","https://login.gov"],
+ ["grantsgov","Register McLearn Media LLC on Grants.gov","https://www.grants.gov"],
+ ["sbir","Register on SBIR.gov and get an SBC Control ID","https://www.sbir.gov"],
+ ["era","Make an eRA Commons account (needed for NIH and ACL)","https://public.era.nih.gov/commons"],
+ ["pitch","Send the NSF Project Pitch (needed before the Nov 4 proposal)","https://seedfund.nsf.gov"],
+ ["spectra","Write the 7-page SPECTRA Solution Summary (due Oct 21)","https://solutions.arpa-h.gov"],
+ ["msfast","Apply for MS-FAST help at least 30 days before the federal deadline","https://www.innovate.ms/mississippi-sbir-sttr-resources/"],
+ ["partner","Line up a nonprofit partner or fiscal sponsor for foundation grants",""],
+ ["uni","Line up a university research partner (for STTR and research grants)",""],
+ ["letters","Collect letters of support: families, SLPs, a school, a clinic",""],
+ ["data","Write down app facts: words, languages, devices, users so far",""],
+ ["verizon","Finish 2 Verizon Digital Ready courses (by Dec 7)","https://opportunitiesforyouth.org/2026/09/11/verizon-small-business-grant/"]
+];
+
+/* ---- projects: each McLearn project gets its own grants, uses, checklist, and draft wording ---- */
+const PROJ = [
+ {k:"speakeasy",name:"Speakeasy app",em:"🗣️",blurb:"our talking app for nonspeaking people"},
+ {k:"music",name:"MP music",em:"🎵",blurb:"McLearn Media's songs, released under the artist name MP"},
+ {k:"church",name:"Church & community media",em:"⛪",blurb:"McLearn apps, websites, presentations, and promos for churches and community events. The church or nonprofit gets the grant, and McLearn is written into its budget as the paid tech partner"}
+];
+G.forEach(g=>{ if(!g.proj) g.proj = ["speakeasy"]; });
+G.find(g=>g.id==="verizon").proj = ["speakeasy","music","church"];
+G.find(g=>g.id==="cfm").proj = ["speakeasy","church"];
+G.find(g=>g.id==="verizon").fit = "Flexible money for the business itself, so it can serve any McLearn project: test devices for Speakeasy, or promotion for MP.";
+G.find(g=>g.id==="verizon").ai = "Doesn't matter. It judges the business, not the music.";
+G.push(
+ {id:"aiaa",proj:["music"],name:"AI Artists Alliance grants (Artist Accelerator)",funder:"AI Artists Alliance",amt:"Up to $5,000 (per a grant database; confirm)",due:null,dueNote:"Read their 2026 Call to Artists page for open dates.",lane:"now",ok:false,ai:"Made for artists who work with AI.",elig:"Artists who use AI in their work and explore what it means for creativity and society.",fit:"Built for exactly your process: your own words, with AI tools making the sound. Tell the story of a songwriter who owns 100% of his lyrics and uses AI to bring them to life.",uses:["m-ai"],link:"https://aiartistsalliance.net/"},
+ {id:"humanityai",proj:["music"],name:"Communities Leading on AI — open call",funder:"Humanity AI",amt:"$75,000 to $1,000,000",due:"2026-10-21",dueNote:"First applications are due Wed Oct 21 at 7:59 PM Eastern. That's only days away, and a nonprofit has to lead, so treat this one as a long shot.",lane:"partner",ok:true,ai:"About AI itself. They want projects that protect artists' own work, so your lyric ownership is the angle.",elig:"A US 501(c)(3) must apply or act as fiscal sponsor. Individuals and businesses can join a team the nonprofit leads.",fit:"A community project such as 'Mississippi Songwriters and AI': free workshops on writing your own lyrics, protecting them with copyright, and using AI tools without giving up ownership.",uses:["m-ai","m-teach"],link:"https://humanityai.ai/open-call/"},
+ {id:"mac-orgmini",proj:["music"],name:"Mini-Grants for Organizations (to hire you for workshops)",funder:"Mississippi Arts Commission",amt:"$200–$1,000 (the group must match it)",due:"2026-11-01",dueNote:"Listed as due Nov 1 in a grant database; confirm on MAC's page. The partner group applies, not you.",lane:"partner",ok:false,ai:"Doesn't apply. The group is paying you to teach songwriting, not judging your recordings.",elig:"Mississippi nonprofits, schools, libraries, and local governments.",fit:"A library, school, or community center applies to pay you to teach a lyric-writing workshop. Your strength is your words, and this pays for exactly that.",uses:["m-teach"],link:"https://arts.ms.gov/grants-for-organizations/minigrants-for-organizations/"},
+ {id:"mac-project",proj:["music"],name:"Project Grants",funder:"Mississippi Arts Commission",amt:"$250–$5,000",due:null,dueNote:"Check MAC's page for the next date.",lane:"partner",ok:false,ai:"Doesn't apply. It funds the partner's project, such as a workshop series.",elig:"Mississippi nonprofits and local governments.",fit:"A bigger version: a lyric-writing series at a library or an after-school program, with you as the teaching artist.",uses:["m-teach"],link:"https://arts.ms.gov/grants-for-organizations/"},
+ {id:"mac-mini",proj:["music"],name:"Artist Mini-Grant",funder:"Mississippi Arts Commission",amt:"Up to $500",due:null,dueNote:"Opens May 1 and is due Jun 1, 2027, through MAC's eGRANT site. You pay first and get paid back after your final report.",lane:"next",ok:true,ai:"Unclear. MAC asks every applicant about AI use. Call MAC before applying and ask whether a songwriter whose recordings were made with AI qualifies.",elig:"Professional Mississippi artists over 18 who earn part of their income from their art; no degree-seeking students.",fit:"Pays for professional photos, a one-time website design, printed promo, or a songwriting conference. Apply as a songwriter.",uses:["m-market"],link:"https://arts.ms.gov/grants/grants-for-individuals/minigrants-for-individuals/"},
+ {id:"recfund",proj:["music"],name:"Recording Fund (optional: real singers for your lyrics)",funder:"Recording Fund (with the University of Rochester's Institute for Music Leadership)",amt:"Varies with available money",due:null,dueNote:"No dates listed. Check the apply page to see whether it's open.",lane:"now",ok:true,ai:"Doesn't apply to your current songs. It pays for new recordings made by people.",elig:"Artists and musicians 18 or older who are US citizens.",fit:"Only if you ever want human-voiced versions of your lyrics. It pays session singers and players, mixing, and mastering directly. Skip it if you're keeping the AI voices.",uses:["m-human"],link:"https://www.recordingfund.org/",link2:"https://iml.esm.rochester.edu/grant/recording-fund/"},
+ {id:"amt",proj:["music"],name:"Artists Make Technology",funder:"Doris Duke Foundation with Mozilla Foundation",amt:"About $25,000–$500,000 (per a grant database; confirm)",due:null,dueNote:"Awards come through invited and partner-run open calls. Watch for one.",lane:"next",ok:false,ai:"Made for artists working with AI.",elig:"US performing artists, groups, and arts-and-technology teams.",fit:"For a bigger AI-and-music project later, especially with a partner.",uses:["m-ai"],link:"https://www.dorisduke.org/grants/projects/artists-make-technology"},
+ {id:"knight",proj:["music"],name:"Knight Arts + Tech Fellowship",funder:"Knight Foundation, run by United States Artists",amt:"$50,000",due:null,dueNote:"The page shows no open application; artists seem to be selected, not to apply. Watch for changes.",lane:"next",ok:true,ai:"Made for artists working with new technology, including AI.",elig:"Focused on 8 Knight cities, but it also supports artists nationwide who work with new technology.",fit:"A long-term goal once MP has a public track record in AI music.",uses:["m-ai"],link:"https://www.unitedstatesartists.org/programs/initiatives/knight-arts-tech-fellowship"}
+);
+G.push(
+ {id:"gads",proj:["church"],name:"Google Ad Grants (free search ads)",funder:"Google for Nonprofits",amt:"Up to $10,000 a month in Google search ads",due:null,dueNote:"Open all year. Google checks the church's nonprofit status, which takes about 1–2 weeks.",lane:"partner",ok:false,elig:"Churches and nonprofits with 501(c)(3) status. A denomination's group letter that names the church also works. The church applies.",fit:"Your strongest offer. Most churches get turned down because their website isn't good enough. Google wants HTTPS, at least 5 real pages, a clear mission statement, and no broken links. McLearn builds a site that passes, then sets up and manages the ads for a monthly fee.",uses:["c-web","c-promo"],link:"https://www.google.com/grants/",link2:"https://reachrightstudios.com/google-grant-requirements"},
+ {id:"canva",proj:["church"],name:"Canva for Nonprofits (free Canva Pro)",funder:"Canva",amt:"Free Canva Pro for the church's team",due:null,dueNote:"Open all year.",lane:"partner",ok:false,elig:"Nonprofits with 501(c)(3) status, including churches that have it. The church applies.",fit:"You design flyers, slides, and social posts in the church's own Canva space, and their volunteers can edit them later. It saves the church money and keeps your designs in use.",uses:["c-present","c-promo"],link:"https://www.canva.com/canva-for-nonprofits/"},
+ {id:"walmart",proj:["church"],name:"Spark Good Local Grants",funder:"Walmart and Sam's Club",amt:"$250–$5,000",due:null,dueNote:"Runs in rounds through the year; one listing shows a Dec 31, 2026 deadline. Approved money must be claimed within 21 days.",lane:"partner",ok:false,elig:"Nonprofits, schools, and churches, but churches only for community-benefit projects like a food pantry or clothing closet. Apply to a nearby Walmart.",fit:"A church's community event, such as a back-to-school drive or a food giveaway. Put a small promotion line in the budget (flyers, a sign-up page, a social video) that McLearn makes.",uses:["c-community","c-promo"],link:"https://walmart.com/nonprofits"},
+ {id:"mhc",proj:["church"],name:"Humanities minigrants and Mississippi Stories grants",funder:"Mississippi Humanities Council",amt:"Minigrants up to $2,500; Mississippi Stories up to $5,000 (no match needed in 2026–27)",due:"2027-01-15",dueNote:"Mississippi Stories deadlines are Jan 15, May 1, and Sep 15. Minigrants have no deadline but must be in 4 weeks before the program starts.",lane:"partner",ok:true,elig:"Nonprofit groups; they don't have to be incorporated. Businesses and individuals can't apply. Churches aren't named in the rules, so ask MHC.",fit:"Not for preaching or promoting a church. It funds community history: an oral-history video of a church's role in its town, a podcast, or an online exhibit. McLearn records, edits, and builds the web page.",uses:["c-history"],link:"https://www.mshumanities.org/wp-content/uploads/2026/08/MHC-grant-guidelines_rev.-08.17.26.pdf"},
+ {id:"lilly",proj:["church"],name:"Serving Neighbors Through Congregational Collaborations",funder:"Lilly Endowment",amt:"Planning grants up to $50,000; later grants up to $5 million",due:"2027-01-19",dueNote:"Concept papers are due Jan 19, 2027. Planning grants are announced by the end of March 2027.",lane:"partner",ok:false,elig:"A 501(c)(3) that brings churches and community groups together, such as a denomination office, church network, seminary, or faith-based service group. Single churches can't apply alone.",fit:"Find a church network or denominational office in Mississippi that's applying. Offer to be its tech and communications partner: a shared website or app, event promos, and presentations for the churches working together.",uses:["c-app","c-web","c-community"],link:"https://opportunitiesforyouth.org/2026/10/13/lilly-endowment-serving-neighbors-grant-2027-apply-for-planning-grants-of-up-to-50000-and-implementation-grants-of-up-to-5-million-2/"}
+);
+U.forEach(u=>{ if(!u.proj) u.proj = "speakeasy"; });
+U.push(
+ {proj:"church",k:"c-web",em:"🌐",t:"Church websites",d:"Sites built to pass Google's rules, so the church can get up to $10,000 a month in free search ads.",l:["HTTPS, 5 or more real pages, a clear mission, no broken links","Visitors find service times, events, and ways to help","A monthly care plan for McLearn"]},
+ {proj:"church",k:"c-app",em:"📱",t:"Church apps",d:"Events, sermons, prayer requests, and announcements on members' phones.",l:["Built on the same tools as your other McLearn apps","Works for church networks working together","Fits the Lilly Endowment partner role"]},
+ {proj:"church",k:"c-present",em:"🖥️",t:"Presentations and slides",d:"Announcement slides, ministry reports, and pitch decks for church boards and funders.",l:["Built in the church's free Canva Pro space","Grant presentations for church partners","Reusable templates"]},
+ {proj:"church",k:"c-promo",em:"📣",t:"Promos and flyers",d:"Flyers, social videos, and sign-up pages that fill community events.",l:["A small promo line in every community grant budget","Search ads through Google Ad Grants","Track sign-ups so funders see results"]},
+ {proj:"church",k:"c-community",em:"🤝",t:"Community events",d:"Back-to-school drives, food giveaways, health fairs, and family days.",l:["Walmart and Community Foundation grants fund the event","McLearn handles promotion and the sign-up page","Photos and numbers for the church's next grant"]},
+ {proj:"church",k:"c-history",em:"🎞️",t:"Church and community history",d:"Oral-history videos, podcasts, and online exhibits about a church's place in its town.",l:["Mississippi Humanities Council funds this (no preaching)","McLearn records, edits, and publishes","Keeps elders' stories for the next generation"]},
+ {proj:"music",k:"m-ai",em:"🤖",t:"Songwriting with AI, done honestly",d:"Your lyrics, 100% yours, brought to life with AI tools, and open about how.",l:["Fits the new AI-and-art funders","Shows how to use AI without giving up ownership","A story few Mississippi artists can tell"]},
+ {proj:"music",k:"m-teach",em:"✍️",t:"Lyric-writing workshops",d:"Teach young people and adults to turn their own stories into lyrics.",l:["Libraries, schools, and after-school programs","Paid through partner groups (MAC organization grants)","Your words are the product, so AI recordings don't matter here"]},
+ {proj:"music",k:"m-market",em:"📣",t:"Promotion and career growth",d:"Professional photos, a website, a press kit, and songwriting conferences.",l:["Supports the 'Who Got Your Back' push","Makes every later application stronger","Small grants fit here"]},
+ {proj:"music",k:"m-story",em:"🌾",t:"A Mississippi music story",d:"A Brandon songwriter building his own publishing company at home.",l:["McLearn Media owns 100% of the catalog","Released worldwide through Too Lost","Funders like home-state artists who own their work"]},
+ {proj:"music",k:"m-biz",em:"📈",t:"The music business",d:"Grow McLearn Media's publishing and release work as a small business.",l:["Business grants (like Verizon) don't judge the music","Rights set up with The MLC and Too Lost, with BMI under way","Good for business coaching programs"]},
+ {proj:"music",k:"m-human",em:"🎙️",t:"Human-voiced versions (optional)",d:"If you ever want real singers on your lyrics, some grants pay for that.",l:["Pays Mississippi singers and players","Gives you recordings that are fully copyrightable","Only if you choose it"]}
+);
+const CKS = CK.map(([k,t,u])=>({k,t,u,proj:["uei","login","verizon"].includes(k)?"all":"speakeasy"}));
+CKS.push(
+ {proj:"church",k:"c-list",t:"List your church and nonprofit clients, and confirm each has a 501(c)(3) letter or a denomination group letter",u:""},
+ {proj:"church",k:"c-sheet",t:"Make a one-page 'McLearn for Churches' sheet with flat prices (website, app, slides, promo, ad management)",u:""},
+ {proj:"church",k:"c-port",t:"Collect 3 samples: a church site, a promo, and a slide deck",u:""},
+ {proj:"church",k:"c-demo",t:"Build one demo church website that meets Google Ad Grant rules",u:"https://www.google.com/grants/"},
+ {proj:"church",k:"c-letter",t:"Write a partner letter churches can sign, naming McLearn as their tech partner",u:""},
+ {proj:"church",k:"c-vendor",t:"Have a W-9 and invoice template ready, so churches can pay you from grant money",u:""},
+ {proj:"church",k:"c-results",t:"Track results for every project (visitors, sign-ups, attendance). Funders ask for these.",u:""},
+ {proj:"music",k:"m-lyrics",t:"Make clean lyric sheets for your 3 strongest songs, plus the streaming links",u:""},
+ {proj:"music",k:"m-copy",t:"Register your lyrics with the U.S. Copyright Office (the words are yours and can be registered)",u:"https://www.copyright.gov/registration/"},
+ {proj:"music",k:"m-ai",t:"Write a short, honest AI statement: 'Lyrics 100% written by me; music and vocals produced with Suno'",u:""},
+ {proj:"music",k:"m-bio",t:"Write a short songwriter bio and an artist statement (first person, present tense)",u:""},
+ {proj:"music",k:"m-call",t:"Call the Mississippi Arts Commission and ask how they treat AI-produced recordings",u:"https://arts.ms.gov/grants/"},
+ {proj:"music",k:"m-epk",t:"Build a press kit: photos, bio, streaming links, and listener numbers",u:""},
+ {proj:"music",k:"m-partner",t:"Find a library, school, or community center to host lyric-writing workshops",u:""},
+ {proj:"music",k:"m-sponsor",t:"Find a nonprofit or fiscal sponsor for the bigger grants that need one",u:""}
+);
+const PITCH = {
+ speakeasy:{title:"Speakeasy: A Voice for Every Nonspeaking Mississippian",ask:100000,reach:"50 families of nonspeaking children and adults in Rankin, Hinds and Madison counties, 5 partner classrooms, and 2 clinics",
+  need:"Many autistic children and adults, and people who lose speech to stroke, ALS, brain injury, or dementia, cannot rely on speech to be understood. Dedicated talking devices and apps can cost hundreds to thousands of dollars, often need internet or one brand of tablet, and are scarce in rural Mississippi, where speech therapists are hard to reach. [Add local numbers: autism counts for your counties from the Mississippi Department of Education or the CDC, and SLP shortage data.]",
+  solTitle:"OUR SOLUTION: SPEAKEASY",sol:["Speakeasy is a talking app that opens from a link on any phone, tablet, Chromebook, or computer, and saves to the device so it works with no internet. Today it has:","  - 2,306 picture words with a clear voice, in word groups people can grow","  - Full English and Spanish, chosen for each person's own profile","  - Adapts to each device: its voices, screen size, and switch or voice-control access","  - Private by design: words stay on the device","Live app: https://speakeasy.mclearn2025.workers.dev"],
+  goals:["Put Speakeasy in the hands of {reach}.","Train families, teachers, and support staff to use it every day.","Build the next feature this funder cares about. [Name it: for example, AI next-word guessing, a new language, or switch access.]","Measure results and share them."],
+  measures:["Number of people using Speakeasy each week","Growth in words and sentences each person uses, measured before and after with consent","Family and teacher ratings of how well the person is understood","Fewer incidents of frustration or behavior, as reported by families and teachers"],
+  budget:[["Staff and development",45],["Devices and technology",25],["Training and outreach",15],["Testing and results",15]]},
+ music:{title:"MP: Mississippi Songs, Made at Home",ask:5000,reach:"listeners in Mississippi and online, plus 3 lyric-writing workshops at local libraries or schools",
+  need:"Independent Mississippi songwriters rarely have the money to release, promote, and protect their work, and many don't know how to use new AI tools without losing ownership of their words. Most music money flows to bigger cities. [Add your numbers: releases, streams, listeners, and where they are.]",
+  solTitle:"THE ARTIST: MP",sol:["MP is the artist name for the music of McLearn Media LLC in Brandon, Mississippi. McLearn Media publishes and owns 100% of the catalog.","  - Songs are released worldwide through the distributor Too Lost","  - Registered with The MLC, with BMI registration under way","  - Lyrics: written 100% by Michael McLaurin","  - Music and vocals: produced with the AI music tool Suno","Listen: https://mclearn-songs.mclearn2025.workers.dev/"],
+  goals:["Release and promote MP songs to {reach}.","Teach lyric-writing workshops with a local partner.","Show other songwriters how to use AI tools while keeping 100% ownership of their words.","Track results and report them."],
+  measures:["New songs released","Streams and listeners before and after","People reached at workshops","Lyrics registered with the Copyright Office"],
+  budget:[["Promotion and photos",40],["Workshops",30],["Release and rights costs",15],["Tools and production",15]]}
+};
+PITCH.church = {title:"Connecting Churches to Their Community",ask:5000,reach:"3 partner churches in Rankin and Hinds counties and the families who come to their community events",
+  need:"Many churches serve their neighbors through food drives, youth programs, and family events, but they can't reach people online. Their websites are old or missing, they have no one to make promotions, and they miss free help such as Google's ad grant because their sites don't meet the rules. [Add numbers: how many people each event serves and how many more could come.]",
+  solTitle:"THE PARTNER: McLEARN MEDIA LLC",sol:["McLearn Media LLC, in Brandon, Mississippi, builds websites, apps, presentations, and promotions for churches and community groups, and already works with nonprofit and faith-based clients.","  - Websites built to qualify for Google Ad Grants (up to $10,000 a month in free search ads)","  - Event promotion: flyers, social videos, and online sign-up pages","  - Presentations and Canva templates church volunteers can keep using"],
+  goals:["Launch or rebuild websites for {reach}.","Promote each church's community events and track sign-ups.","Train church volunteers to keep the sites and promos up to date.","Report the results to the church and the funder."],
+  measures:["Website visitors and sign-ups before and after","Attendance at community events","Google Ad Grant approved and in use","Volunteers trained"],
+  budget:[["Website and app build",40],["Event promotion",30],["Volunteer training",15],["Tracking results",15]]};
+const GENERIC = {title:"",ask:10000,reach:"[who you will reach]",need:"[Describe the problem this project solves, with numbers.]",solTitle:"THE PROJECT",sol:["[What the project is, who runs it, and what already exists.]"],goals:["[Goal 1]","[Goal 2]","[Goal 3]"],measures:["[How you'll show it worked]"],budget:[["Staff",50],["Materials",25],["Outreach",25]]};
+
+const $ = s => document.querySelector(s);
+const el = (t,a={},...c)=>{const e=document.createElement(t);for(const[k,v]of Object.entries(a)){if(k==="class")e.className=v;else if(k==="text")e.textContent=v;else e.setAttribute(k,v);}c.forEach(x=>x!=null&&x!==false&&e.append(x));return e;};
+const days = d => d ? Math.round((new Date(d+"T00:00:00") - TODAY)/864e5) : null;
+const fmt = d => new Date(d+"T00:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});
+
+/* saved state: shared database when available, this browser otherwise */
+let track = {}, checks = {}, custom = {}, extraProj = [], db = null, P = "speakeasy";
+try { track = JSON.parse(localStorage.getItem("gp.track")||"{}"); checks = JSON.parse(localStorage.getItem("gp.checks")||"{}"); custom = JSON.parse(localStorage.getItem("gp.custom")||"{}"); extraProj = JSON.parse(localStorage.getItem("gp.projs")||"[]"); P = localStorage.getItem("gp.proj")||P; } catch {}
+const saveLocal = () => { try { localStorage.setItem("gp.track",JSON.stringify(track)); localStorage.setItem("gp.checks",JSON.stringify(checks)); localStorage.setItem("gp.custom",JSON.stringify(custom)); localStorage.setItem("gp.projs",JSON.stringify(extraProj)); localStorage.setItem("gp.proj",P); } catch {} };
+const oops = (what,e) => { $("#sync").textContent = "Couldn't save " + what + " to the shared tracker (" + (e && e.code || "error") + "). It's saved in this browser."; };
+async function saveTrack(id){ saveLocal(); if (!db) return; try { await db.doc("tracker/"+id).set({...track[id], updated:new Date().toISOString()}); } catch(e){ oops("that status",e); } }
+async function saveChecks(){ saveLocal(); if (!db) return; try { await db.doc("checklist/main").set({items:checks}); } catch(e){ oops("the checklist",e); } }
+async function saveCustom(id){ saveLocal(); if (!db) return; try { if (custom[id]) await db.doc("custom/"+id).set(custom[id]); else await db.doc("custom/"+id).delete(); } catch(e){ oops("that grant",e); } }
+async function saveProjs(){ saveLocal(); if (!db) return; try { await db.doc("settings/projects").set({list:extraProj}); } catch(e){ oops("the project list",e); } }
+
+const allProj = () => [...PROJ, ...extraProj];
+const projOf = k => allProj().find(p=>p.k===k) || PROJ[0];
+const grants = () => [...G, ...Object.values(custom)].filter(g=>g.proj.includes(P));
+const uses = () => U.filter(u=>u.proj===P);
+const items = () => CKS.filter(c=>c.proj===P||c.proj==="all").concat(PITCH[P]?[]:[
+  {k:P+"-desc",t:"Write a one-page description of the project: what, who, where, and cost",u:""},
+  {k:P+"-partner",t:"Find a partner group (nonprofit, school, or church) if the grant needs one",u:""},
+  {k:P+"-samples",t:"Gather proof: photos, numbers, letters of support",u:""}]);
+const pitch = () => PITCH[P] || {...GENERIC, title: projOf(P).name};
+
+/* project switcher */
+function renderProjects(){
+  const W = $("#projs"); W.textContent = "";
+  allProj().forEach(p=>{ const b = el("button",{class:"chip proj","aria-pressed":String(p.k===P),text:(p.em||"📁")+" "+p.name}); b.onclick=()=>{ P=p.k; saveLocal(); renderAll(); }; W.append(b); });
+  const add = el("button",{class:"chip",text:"+ New project"}); add.onclick=()=>{ $("#newProj").hidden = false; $("#npName").focus(); }; W.append(add);
+  const p = projOf(P); $("#projBlurb").textContent = p.blurb ? "Now funding " + p.name + ": " + p.blurb + "." : "Now funding " + p.name + ".";
+}
+$("#npAdd").onclick = ()=>{ const n = $("#npName").value.trim(); if (!n) return; const k = "p-" + n.toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,40);
+  if (!allProj().some(p=>p.k===k)) { extraProj.push({k,name:n,em:"📁",blurb:""}); saveProjs(); }
+  P = k; $("#npName").value=""; $("#newProj").hidden = true; saveLocal(); renderAll(); };
+$("#npCancel").onclick = ()=>{ $("#newProj").hidden = true; };
+
+/* next deadline */
+function renderNext(){
+  const up = grants().filter(g=>g.due && days(g.due)>=0 && g.lane!=="next").sort((a,b)=>a.due.localeCompare(b.due))[0];
+  const n = $("#next"); n.textContent = "";
+  if (!up) { n.append(el("span",{class:"small",text:"Next deadline"}), el("b",{text:"None dated yet"}), el("span",{text:"See the rolling and next-round grants"})); return; }
+  const d = days(up.due);
+  n.append(el("span",{class:"small",text:"Next deadline · " + projOf(P).name}), el("b",{text: d===0?"Today": d+" day"+(d===1?"":"s")}), el("span",{text: up.name.split(" (")[0]+" · "+fmt(up.due)}));
+}
+
+/* grants list */
+let lane = "all";
+const isMine = g => track[g.id] && !["todo","no"].includes(track[g.id].status);
+function renderFilters(){
+  const f = $("#filters"); f.textContent = ""; const gs = grants();
+  const lanes = Object.entries(LANES).filter(([k])=>gs.some(g=>g.lane===k));
+  if (lane!=="all" && lane!=="mine" && !lanes.some(([k])=>k===lane)) lane = "all";
+  [["all","All"],...lanes.map(([k,v])=>[k,v[0]]),["mine","On my list"]].forEach(([k,t])=>{
+    const n = k==="all"?gs.length:k==="mine"?gs.filter(isMine).length:gs.filter(g=>g.lane===k).length;
+    const b = el("button",{class:"chip","aria-pressed":String(lane===k),text:`${t} (${n})`}); b.onclick=()=>{lane=k;renderFilters();renderList();}; f.append(b);
+  });
+}
+function renderList(){
+  const q = $("#q").value.trim().toLowerCase();
+  const order = {now:0,partner:1,next:2,family:3};
+  const rows = grants().filter(g => (lane==="all" || g.lane===lane || (lane==="mine" && isMine(g))) && (!q || JSON.stringify(g).toLowerCase().includes(q)))
+    .sort((a,b)=>{ const da=days(a.due), dbb=days(b.due); const ua = da!=null&&da>=0&&a.lane!=="next", ub = dbb!=null&&dbb>=0&&b.lane!=="next";
+      if (ua!==ub) return ua?-1:1; if (ua&&ub) return da-dbb; return (order[a.lane]??4)-(order[b.lane]??4); });
+  const L = $("#list"); L.textContent = "";
+  $("#count").textContent = rows.length + " grant" + (rows.length===1?"":"s") + " for " + projOf(P).name;
+  if (!rows.length) L.append(el("p",{class:"small",text: grants().length ? "Nothing matches. Clear the search or pick another filter." : "No grants for this project yet. Add one you found with the form below."}));
+  rows.forEach(g=>{
+    const d = days(g.due), t = track[g.id] || {status:"todo",note:""};
+    const due = el("div",{class:"due"+(d!=null&&d>=0&&d<=14&&g.lane!=="next"?" hot":"")});
+    if (g.due && d>=0 && g.lane!=="next") due.append(el("span",{text:fmt(g.due)}), el("small",{text: d===0?"due today":d+" days left"}));
+    else if (g.due && d<0) due.append(el("span",{text:"Closed"}), el("small",{text:fmt(g.due)}));
+    else due.append(el("span",{text:g.lane==="next"?"Watch":"Rolling"}));
+    const meta = el("div",{class:"meta"}, el("span",{class:"tag "+(LANES[g.lane]||LANES.now)[1],text:(LANES[g.lane]||LANES.now)[0]}),
+      el("span",{class:"tag "+(g.mine?"b":g.ok?"":"y"),text:g.mine?"Added by you":g.ok?"Checked":"Confirm"}), g.amt ? el("span",{class:"tag b",text:g.amt}) : null);
+    if (g.proj.length>1) meta.append(el("span",{class:"tag",text:"Fits: " + g.proj.map(k=>projOf(k).name).join(" + ")}));
+    (g.uses||[]).forEach(k=>{ const u=U.find(x=>x.k===k); if(u) meta.append(el("span",{class:"tag",text:u.em+" "+u.t.split(",")[0].split(" and ")[0].split(" with ")[0]})); });
+    const sel = el("select",{"aria-label":"Status for "+g.name}); S.forEach(([v,tx])=>{const o=el("option",{value:v,text:tx}); if(v===t.status)o.selected=true; sel.append(o);});
+    const note = el("input",{type:"text",placeholder:"Notes (who to call, what's left…)","aria-label":"Notes for "+g.name}); note.value = t.note||"";
+    sel.onchange = ()=>{ track[g.id] = {status:sel.value, note:note.value}; saveTrack(g.id); renderFilters(); };
+    note.onchange = ()=>{ track[g.id] = {status:sel.value, note:note.value}; saveTrack(g.id); };
+    const links = el("span",{}); if (g.link) links.append(el("a",{href:g.link,target:"_blank",rel:"noopener",text:"Open grant ↗"}));
+    if (g.link2) links.append(" · ", el("a",{href:g.link2,target:"_blank",rel:"noopener",text:"More ↗"}));
+    if (g.mine) { const x = el("button",{class:"chip",text:"Remove"}); x.onclick=()=>{ delete custom[g.id]; saveCustom(g.id); renderAll(); }; links.append(" ", x); }
+    L.append(el("article",{class:"g",id:"g-"+g.id},
+      el("div",{class:"top"}, el("div",{}, el("h3",{text:g.name}), el("div",{class:"funder",text:g.funder||""})), due), meta,
+      g.fit ? el("div",{class:"fit"}, el("b",{text:"How it fits: "}), g.fit) : null,
+      g.ai ? el("div",{class:"small"}, el("b",{text:"AI music: "}), g.ai) : null,
+      g.elig ? el("div",{class:"small"}, el("b",{text:"Who can apply: "}), g.elig) : null,
+      g.dueNote ? el("div",{class:"small"}, el("b",{text:"Timing: "}), g.dueNote) : null,
+      el("div",{class:"row"}, sel, note, links)));
+  });
+}
+$("#cgAdd").onclick = ()=>{
+  const name = $("#cgName").value.trim(); if (!name) { $("#cgMsg").textContent = "Give the grant a name."; return; }
+  const id = "c" + Date.now().toString(36);
+  custom[id] = {id, mine:true, proj:[P], name, funder:$("#cgFunder").value.trim(), amt:$("#cgAmt").value.trim(), due:$("#cgDue").value||null,
+    lane:$("#cgLane").value, ok:false, link:$("#cgLink").value.trim(), fit:$("#cgFit").value.trim(), elig:"", dueNote:"", uses:[]};
+  saveCustom(id); ["#cgName","#cgFunder","#cgAmt","#cgDue","#cgLink","#cgFit"].forEach(s=>$(s).value=""); $("#cgMsg").textContent = "Added to " + projOf(P).name + "."; renderAll();
+};
+
+/* uses */
+function renderUses(){
+  const W = $("#uses"); W.textContent = "";
+  const us = uses();
+  if (!us.length) W.append(el("p",{class:"small",text:"No use map for this project yet. Ask Claude to build one: it lists every group the project helps and the grants that fit each."}));
+  us.forEach(u=>{
+    const gs = grants().filter(g=>(g.uses||[]).includes(u.k));
+    const ul = el("ul"); u.l.forEach(x=>ul.append(el("li",{text:x})));
+    const fund = el("div",{class:"small"}, el("b",{text:"Grants: "}));
+    if (!gs.length) fund.append(P!=="speakeasy" ? "Small-business grants, like Verizon Digital Ready." : "Use the NIH or NSF small-business routes, or a partner foundation.");
+    gs.forEach((g,i)=>{ const a = el("a",{href:"#g-"+g.id,text:g.name.split(" (")[0].split(" —")[0]}); a.onclick=e=>{e.preventDefault(); lane="all"; $("#q").value=""; renderFilters(); renderList(); show("grants"); setTimeout(()=>{const c=document.getElementById("g-"+g.id); c&&c.scrollIntoView({behavior:"smooth",block:"center"});},50);}; fund.append(i?", ":"", a); });
+    W.append(el("article",{class:"g u"}, el("div",{class:"em",text:u.em}), el("h3",{text:u.t}), el("p",{class:"small",text:u.d}), ul, fund));
+  });
+}
+
+/* proposal builder */
+function renderBuilder(){
+  const p = pitch(), s = $("#bGrant"); s.textContent = "";
+  grants().filter(g=>g.lane!=="family").forEach(g=>s.append(el("option",{value:g.id,text:g.name+(g.funder?" — "+g.funder:"")})));
+  if (!s.options.length) s.append(el("option",{value:"",text:"Add a grant to this project first"}));
+  const c = $("#bUses"); c.textContent = "";
+  uses().forEach(u=>{ const i = el("input",{type:"checkbox",value:u.k}); c.append(el("label",{}, i, u.em+" "+u.t)); });
+  if (!uses().length) c.append(el("span",{class:"small",text:"No uses mapped for this project yet."}));
+  s.onchange = ()=>{ const g = grants().find(x=>x.id===s.value); c.querySelectorAll("input").forEach(i=>i.checked = !!g && (g.uses||[]).includes(i.value)); };
+  s.onchange();
+  $("#bTitle").value = p.title; $("#bAsk").value = p.ask; $("#bReach").value = p.reach;
+  const tb = $("#bBudget"); tb.textContent = "";
+  p.budget.forEach(([n,v],i)=>{ const inp = el("input",{type:"number",min:"0",max:"100",value:String(v),"aria-label":n+" percent"}); tb.append(el("tr",{}, el("td",{text:n}), el("td",{style:"width:90px"},inp))); });
+  $("#bOut").textContent = 'Pick a grant and press "Write the draft."';
+}
+const money = n => "$" + Math.round(n).toLocaleString();
+function draft(){
+  const p = pitch(), g = grants().find(x=>x.id===$("#bGrant").value);
+  if (!g) return "Add a grant to this project first, on the Grants tab.";
+  const picked = [...document.querySelectorAll("#bUses input:checked")].map(i=>U.find(u=>u.k===i.value));
+  const ask = +$("#bAsk").value||0, mo = +$("#bMonths").value||12;
+  const pct = [...document.querySelectorAll("#bBudget input")].map(i=>+i.value||0), tot = pct.reduce((a,b)=>a+b,0);
+  const reach = $("#bReach").value.trim() || "[who you will reach]", contact = $("#bContact").value.trim();
+  const missing = items().filter(({k})=>!checks[k]).map(({t})=>"  [ ] "+t);
+  const L = [], H = (n,t) => L.push(n+". "+t);
+  L.push(($("#bTitle").value.trim()||projOf(P).name).toUpperCase(), "");
+  if (P==="church") L.push("Applicant: [Church or nonprofit name, address, EIN]", "Technology partner: McLearn Media LLC, Brandon, Mississippi · 601-808-9559" + (contact?"   Email: "+contact:""));
+  else L.push("Applicant: McLearn Media LLC, Brandon, Mississippi", "Phone: 601-808-9559" + (contact?"   Email: "+contact:""));
+  L.push("For: " + g.name + (g.funder?" — "+g.funder:""), "Request: " + money(ask) + " over " + mo + " months", "");
+  let n = 1;
+  H(n++,"THE NEED"); L.push(p.need, "");
+  H(n++,p.solTitle); L.push(...p.sol, "");
+  if (picked.length){ H(n++,"WHERE THIS WILL MAKE A DIFFERENCE"); picked.forEach(u=>{ L.push("  " + u.t + ": " + u.d); u.l.forEach(x=>L.push("     - "+x)); }); L.push(""); }
+  if (g.fit){ H(n++,"WHY IT FITS THIS FUNDER"); L.push(g.fit, ""); }
+  H(n++,"GOALS"); p.goals.forEach((x,i)=>L.push("  Goal "+(i+1)+": "+x.replace("{reach}",reach))); L.push("");
+  H(n++,"HOW WE WILL MEASURE SUCCESS"); p.measures.forEach(x=>L.push("  - "+x)); L.push("");
+  H(n++,"BUDGET (" + money(ask) + ")");
+  p.budget.forEach(([nm],i)=>L.push("  " + nm.padEnd(26) + String(pct[i]).padStart(3) + "%   " + money(ask*pct[i]/100)));
+  if (tot!==100) L.push("  ! These add up to " + tot + "%, not 100%. Fix the split before you send it.");
+  L.push("  Check the funder's rules on what costs are allowed.", "");
+  const q1 = Math.max(1,Math.round(mo/4)), q3 = Math.max(q1+1,Math.round(mo*3/4));
+  H(n++,"TIMELINE"); L.push("  Months 1–" + q1 + ": partners signed, plans set, starting numbers recorded", "  Months " + (q1+1) + "–" + q3 + ": the main work", "  Months " + (q3+1) + "–" + mo + ": final numbers, report, and plan to keep it going", "");
+  if (g.dueNote) L.push("TIMING NOTE: " + g.dueNote);
+  if (g.elig) L.push("WHO CAN APPLY: " + g.elig);
+  L.push("");
+  if (missing.length) L.push("STILL TO DO BEFORE SENDING (from your checklist):", ...missing); else L.push("Checklist: all items marked done.");
+  return L.join("\n");
+}
+
+/* checklist */
+function renderChecks(){
+  const W = $("#ck"); W.textContent = "";
+  $("#ckIntro").textContent = P==="speakeasy" ? "Most federal grants won't accept an application until these are done. Several take weeks, so start with the first four now."
+    : P==="church" ? "Here the church or nonprofit is the applicant and McLearn is the paid partner. Get these ready so you can hand each church a complete package."
+    : P==="music" ? "These grants were picked because AI-made music won't knock you out. Your lyrics are 100% yours, so protect them and say so plainly." : "Start here for any new project.";
+  items().forEach(({k,t,u})=>{
+    const i = el("input",{type:"checkbox",id:"ck-"+k}); i.checked = !!checks[k];
+    i.onchange = ()=>{ checks[k] = i.checked; saveChecks(); };
+    const box = el("div",{}, el("label",{for:"ck-"+k,style:"margin:0;font-weight:500;font-size:15px"}, t));
+    if (u) box.append(el("div",{}, el("a",{href:u,target:"_blank",rel:"noopener",class:"small",text:u.replace(/^https?:\/\//,"")+" ↗"})));
+    W.append(el("div",{class:"g"}, i, box));
+  });
+}
+
+function renderAll(){ renderProjects(); renderNext(); renderFilters(); renderList(); renderUses(); renderBuilder(); renderChecks(); }
+
+/* tabs */
+function show(t){ document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.t===t))); document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.id==="p-"+t)); try{localStorage.setItem("gp.tab",t);}catch{} }
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>show(b.dataset.t));
+$("#q").oninput = renderList;
+$("#bGo").onclick = ()=>{ $("#bOut").textContent = draft(); $("#bMsg").textContent = ""; };
+$("#bCopy").onclick = async ()=>{ try { await navigator.clipboard.writeText($("#bOut").textContent); $("#bMsg").textContent = "Copied."; } catch { $("#bMsg").textContent = "Select the text and copy it by hand."; } };
+
+if (!allProj().some(p=>p.k===P)) P = "speakeasy";
+renderAll();
+try { const t = localStorage.getItem("gp.tab"); if (t) show(t); } catch {}
+
+/* connect the shared tracker and file saving when this page is opened on claude.ai */
+if (window.claude && claude.use) {
+  claude.use("db").then(d=>{
+    if (!d) return; db = d; $("#sync").textContent = "Saving: your shared tracker";
+    const busy = () => document.activeElement && document.activeElement.closest("#list,#cg,#newProj");
+    db.collection("tracker").onSnapshot(s=>{ s.docs.forEach(x=>{ const v=x.data(); if(v) track[x.id] = {status:v.status||"todo", note:v.note||""}; }); saveLocal(); renderFilters(); if (!busy()) renderList(); },
+      ()=>{ $("#sync").textContent = "Shared tracker unavailable — saving in this browser"; db = null; });
+    db.doc("checklist/main").onSnapshot(s=>{ const v = s.exists && s.data(); if (v && v.items) { checks = {...v.items}; saveLocal(); renderChecks(); } }, ()=>{});
+    db.collection("custom").onSnapshot(s=>{ const next = {}; s.docs.forEach(x=>{ const v = x.data(); if (v && v.name && Array.isArray(v.proj)) next[x.id] = {...v, id:x.id, mine:true}; });
+      for (const [k,v] of Object.entries(custom)) if (!next[k]) next[k] = v; /* keep ones saved only in this browser */
+      custom = next; saveLocal(); if (!busy()) { renderNext(); renderFilters(); renderList(); } }, ()=>{});
+    db.doc("settings/projects").onSnapshot(s=>{ const v = s.exists && s.data(); if (v && Array.isArray(v.list)) { const seen = new Set(v.list.map(p=>p.k)); extraProj = [...v.list, ...extraProj.filter(p=>!seen.has(p.k))]; saveLocal(); renderProjects(); } }, ()=>{});
+  });
+  claude.use("downloads").then(dl=>{
+    if (!dl) return; const b = $("#bSave"); b.hidden = false;
+    b.onclick = async ()=>{ try { await dl.save({filename:"mclearn-grant-draft.txt", data:$("#bOut").textContent}); $("#bMsg").textContent = "Saved."; } catch(e){ $("#bMsg").textContent = (e && e.code)==="declined" ? "" : "Couldn't save the file."; } };
+  });
+}
+})();
+</script>
+
+</body>
+</html>
